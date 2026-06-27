@@ -4,7 +4,7 @@
 
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use tauri::{Manager, WebviewWindowBuilder, WebviewUrl};
+use tauri::{Manager, WindowBuilder, WindowUrl};
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -26,14 +26,16 @@ async fn launch_instance(
 
     // 2. Configurar la ventana con aislamiento de User Data
     let target_url = if is_local {
-        WebviewUrl::App(PathBuf::from(&url))
+        WindowUrl::App(PathBuf::from(&url))
     } else {
-        WebviewUrl::External(url.parse().map_err(|e| format!("URL inválida: {}", e))?)
+        WindowUrl::External(url.parse().map_err(|e| format!("URL inválida: {}", e))?)
     };
 
-    WebviewWindowBuilder::new(&app, label, target_url)
+    // NOTA: user_data_dir no está disponible en Tauri v1 WindowBuilder.
+    // Para v1, la persistencia se maneja de forma global o mediante otros métodos.
+    // Si se requiere aislamiento total por ventana, se recomienda migrar a Tauri v2.
+    WindowBuilder::new(&app, label, target_url)
         .title(format!("cm2labs - Instance Launcher"))
-        .user_data_dir(data_dir) // EL SECRETO DE LA MULTI-INSTANCIA
         .build()
         .map_err(|e| e.to_string())?;
 
