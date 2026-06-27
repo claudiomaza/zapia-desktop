@@ -1,0 +1,40 @@
+{
+  "package": {
+    "productName": "zapia-by-cm2labs",
+    "version": "1.2.1"
+  },
+  "build": {
+    "distDir": "../ui",
+    "devPath": "../ui",
+    "beforeBuildCommand": ""
+  },
+  "tauri": {
+    "allowlist": {
+      "all": true
+    },
+    "bundle": {
+      "active": true,
+      "targets": "all",
+      "identifier": "com.cm2labs.zapia",
+      "icon": ["icons/icon.ico"],
+      "windows": {
+        "nsis": {
+          "installMode": "currentUser",
+          "installerIcon": "icons/icon.ico",
+          "languages": ["Spanish", "English"],
+          "displayLanguageSelector": true
+        }
+      }
+    },
+    "security": {
+      "csp": null
+    },
+    "windows": [
+      {
+        "title": "Zapia by cm2labs",
+        "width": 1024,
+        "height": 768
+      }
+    ]
+  }
+}
