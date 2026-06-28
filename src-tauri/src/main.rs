@@ -1,6 +1,7 @@
 // cm2labs Instance Manager - Core v1.1
 // Nomenclatura: appname-by-cm2labs.exe
 // Bóveda Local: AES-256-GCM + Zero-Knowledge Architecture
+// Context7 Documentation Sync: Verified with Tauri v1.5 official docs
 
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
@@ -28,14 +29,13 @@ async fn launch_instance(
     let target_url = if is_local {
         WindowUrl::App(PathBuf::from(&url))
     } else {
+    // NOTA1: Se aplica inyección de contexto para Tauri v1.5.
         WindowUrl::External(url.parse().map_err(|e| format!("URL inválida: {}", e))?)
     };
 
-    // NOTA: user_data_dir no está disponible en Tauri v1 WindowBuilder.
-    // Para v1, la persistencia se maneja de forma global o mediante otros métodos.
-    // Si se requiere aislamiento total por ventana, se recomienda migrar a Tauri v2.
     WindowBuilder::new(&app, label, target_url)
         .title(format!("cm2labs - Instance Launcher"))
+        .data_directory(data_dir) // EL SECRETO DE LA MULTI-INSTANCIA (Tauri v1.x)
         .build()
         .map_err(|e| e.to_string())?;
 
